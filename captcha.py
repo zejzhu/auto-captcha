@@ -2,13 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from webdriver_manager import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
 from dotenv import load_dotenv
 import pytesseract
 from PIL import Image
 import tempfile
 import os
-from time import wait
+from time import sleep
 
 
 '''
@@ -28,7 +28,7 @@ tesseract_path = os.getenv("TESSERACT_PATH")
 service = Service(ChromeDriverManager().install)
 driver = webdriver.Chrome(service=service)
 driver.get(url)
-wait(2)
+sleep(2)
 
 captcha_counter = 0
 while True:
@@ -50,7 +50,7 @@ while True:
 
     captcha_counter += 1
     print(captcha_counter, end=', ')
-    wait(0.5)
+    sleep(0.5)
 
 
 
