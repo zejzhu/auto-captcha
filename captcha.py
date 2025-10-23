@@ -1,13 +1,16 @@
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from webdriver_manager import ChromeDriverManager
 from dotenv import load_dotenv
 import pytesseract
 from PIL import Image
 import tempfile
-import requests
 import os
+from time import wait
+
+
 '''
 infinitely sends captcha using ocr
 '''
@@ -21,14 +24,34 @@ input_identifier = os.getenv("INPUT_ID")
 tesseract_path = os.getenv("TESSERACT_PATH")
 
 
-
 # selenium time
 service = Service(ChromeDriverManager().install)
 driver = webdriver.Chrome(service=service)
-
 driver.get(url)
-captcha_element = driver.find_element_by_xpath(captcha_identifier)
-input_element = driver.find_element_by_xpath()
+wait(2)
+
+captcha_counter = 0
+while True:
+    # screenshot captcha image and save to a temporary file
+    # (src is constantly refreshing so you need to screenshot)
+    captcha_element = driver.find_element_by_xpath(captcha_identifier)
+
+    with tempfile.NamedTemporaryFile(delete=True, suffix='.png') as temp_img:
+        captcha_element.screenshot(temp_img.name)
+
+        # use OCR to get captcha answer
+        image = Image.open(temp_img.name)
+        answer = pytesseract.image_to_string(image)
+
+    # type the answer into the input form
+    input_element = driver.find_element_by_xpath(input_identifier)
+    input_element.send_keys(answer)
+    input_element.send_keys(Keys.ENTER)
+
+    captcha_counter += 1
+    print(captcha_counter, end=', ')
+    wait(0.5)
+
 
 
 
