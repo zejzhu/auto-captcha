@@ -24,8 +24,8 @@ input_identifier = os.getenv("INPUT_ID")
 tesseract_path = os.getenv("TESSERACT_PATH")
 
 
-# selenium time
-service = Service(ChromeDriverManager().install)
+# selenium time (installs chrome webdriver using webdriver_manager)
+service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
 driver.get(url)
 sleep(2)
@@ -34,7 +34,7 @@ captcha_counter = 0
 while True:
     # screenshot captcha image and save to a temporary file
     # (src is constantly refreshing so you need to screenshot)
-    captcha_element = driver.find_element_by_xpath(captcha_identifier)
+    captcha_element = driver.find_element(By.XPATH, captcha_identifier)
 
     with tempfile.NamedTemporaryFile(delete=True, suffix='.png') as temp_img:
         captcha_element.screenshot(temp_img.name)
@@ -44,7 +44,7 @@ while True:
         answer = pytesseract.image_to_string(image)
 
     # type the answer into the input form
-    input_element = driver.find_element_by_xpath(input_identifier)
+    input_element = driver.find_element(By.XPATH, input_identifier)
     input_element.send_keys(answer)
     input_element.send_keys(Keys.ENTER)
 
