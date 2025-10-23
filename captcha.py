@@ -23,6 +23,8 @@ captcha_identifier = os.getenv("CAPTCHA_ID")
 input_identifier = os.getenv("INPUT_ID")
 tesseract_path = os.getenv("TESSERACT_PATH")
 
+# tell pytesseract ur path
+pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
 # selenium time (installs chrome webdriver using webdriver_manager)
 service = Service(ChromeDriverManager().install())
