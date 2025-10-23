@@ -36,12 +36,12 @@ while True:
     # (src is constantly refreshing so you need to screenshot)
     captcha_element = driver.find_element(By.XPATH, captcha_identifier)
 
-    with tempfile.NamedTemporaryFile(delete=True, suffix='.png') as temp_img:
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as temp_img:
         captcha_element.screenshot(temp_img.name)
 
-        # use OCR to get captcha answer
-        image = Image.open(temp_img.name)
-        answer = pytesseract.image_to_string(image)
+    # use OCR to get captcha answer
+    image = Image.open(temp_img.name)
+    answer = pytesseract.image_to_string(image)
 
     # type the answer into the input form
     input_element = driver.find_element(By.XPATH, input_identifier)
